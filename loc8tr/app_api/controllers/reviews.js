@@ -18,18 +18,14 @@ const locationsReadOne = async function (req, res) {
             return res.status(404).json({ message: 'Location not found' });
         }
         
-        const review = await location.reviews.id(req.params.reviewId);
-        if (!review) {
-            return res.status(404).json({ message: 'Review not found' });
-        }
+        location.reviews.push({
+          author: req.body.author,
+          rating: req.body.rating,
+          reviewText: req.body.reviewText
+        });
         
-        const response = {
-            location: {
-                name: location.name,
-                _id: req.params.locationId
-            },
-            review,
-        };
+        const savedLocation =  location.save();
+        const review = savedLocation.reviews[savedLocation.reviews.length - 1];
         
         return res.status(200).json(review);  
 
