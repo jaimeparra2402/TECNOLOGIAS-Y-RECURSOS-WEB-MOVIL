@@ -11,7 +11,7 @@ const reviewsReadOne = async function (req, res) {
     }
 }
 
-const locationsReadOne = async function (req, res) {
+const reviewsCreate = async function (req, res) {
     try {
         const location = await Loc.findById(req.params.locationId).select('name reviews').exec();
         if (!location) {
@@ -43,5 +43,6 @@ const locationsCreate = function (req, res) {
 }   
 
 module.exports = {
-    reviewsReadOne
+    reviewsReadOne,
+    reviewsCreate
 };
