@@ -39,8 +39,46 @@ const locationsCreate = function (req, res) {
     }
 }   
 
+const locationsUpdateOne = function (req, res) {
+    try {
+        const location = Loc.findByIdAndUpdate(
+            req.params.locationId,
+            req.body,
+            { new: true, runValidators: true }
+        );
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }   
+        return res.status(200).json(location);
+    } catch (err) {
+        console.error(err);
+        if(err.name === 'CastError' && err.kind === 'ObjectId') {
+            return res.status(400).json({ message: 'Invalid location ID' });
+        }
+        res.status(500).json({ error: err.message });
+    }
+}
+
+const locationsDeleteOne = function (req, res) {
+    try {
+        const location = Loc.findByIdAndRemove(req.params.locationId);
+        if (!location) {
+            return res.status(404).json({ message: 'Location not found' });
+        }
+        res.status(200).json({ message: 'Location deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        if(err.name === 'CastError' && err.kind === 'ObjectId') {
+            return res.status(400).json({ message: 'Invalid location ID' });
+        }
+        res.status(500).json({ error: err.message });
+    }
+}
+
 module.exports = {
     locationsReadAll,
     locationsReadOne,
-    locationsCreate
+    locationsCreate,
+    locationsUpdateOne,
+    locationsDeleteOne
 };
